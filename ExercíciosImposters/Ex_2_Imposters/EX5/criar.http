@@ -1,0 +1,182 @@
+### Exercício 5 – Gestão de Funcionários
+### Criar imposter no Mountebank (porta 4565)
+
+POST http://localhost:2525/imposters
+Content-Type: application/json
+
+{
+  "port": 4565,
+  "protocol": "http",
+  "stubs": [
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/funcionarios" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": [
+              { "id": 1, "nome": "Ana Silva",    "cargo": "Desenvolvedora", "salario": 1800, "tarefas_pendentes": false },
+              { "id": 2, "nome": "Bruno Costa",  "cargo": "Designer",       "salario": 1400, "tarefas_pendentes": true  },
+              { "id": 3, "nome": "Carla Mendes", "cargo": "Gestora",        "salario": 2200, "tarefas_pendentes": false }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/funcionarios" } },
+        {
+          "not": {
+            "and": [
+              { "contains": { "body": "\"nome\"" } },
+              { "contains": { "body": "\"cargo\"" } },
+              { "contains": { "body": "\"salario\"" } }
+            ]
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Campos obrigatórios em falta: nome, cargo, salario" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/funcionarios" } },
+        { "contains": { "body": "\"salario\": 5" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Salário inferior ao mínimo permitido (760 €)" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/funcionarios" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json",
+              "Location": "/api/funcionarios/4"
+            },
+            "body": {
+              "id": 4,
+              "status": "Funcionário registado com sucesso"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/funcionarios/1/salario" } },
+        { "contains": { "body": "\"salario\": 5" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Salário inferior ao mínimo permitido (760 €)" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/funcionarios/99/salario" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Funcionário não encontrado" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/funcionarios/1/salario" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "id": 1, "salario_atualizado": 2000, "status": "Salário atualizado" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/funcionarios/2" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 409,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Funcionário tem tarefas pendentes e não pode ser removido" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/funcionarios/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Funcionário não encontrado" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/funcionarios/1" } }
+      ],
+      "responses": [
+        {
+          "is": { "statusCode": 204 }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "GET" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "not_found" }
+          }
+        }
+      ]
+    }
+  ]
+}

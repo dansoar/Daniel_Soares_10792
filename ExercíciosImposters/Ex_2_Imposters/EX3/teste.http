@@ -1,0 +1,98 @@
+
+#GET http://localhost:4561/api/reservas
+
+
+
+#GET http://localhost:4561/api/reservas/1
+
+
+
+#GET http://localhost:4561/api/reservas/99
+
+
+#POST http://localhost:4561/api/reservas
+#Content-Type: application/json
+
+#{
+  #"cliente": "Ana",
+  #"checkin": "2024-05-20",
+  #"checkout": "2024-05-22",
+  #"tipo_quarto": "duplo"
+##}
+
+
+
+POST http://localhost:4561/api/reservas
+Content-Type: application/json
+
+{
+  "cliente": "Ana"
+}
+
+
+
+POST http://localhost:4561/api/reservas
+Content-Type: application/json
+
+{
+  "cliente": "Ana",
+  "checkin": "2024-05-10",
+  "checkout": "2024-05-01",
+  "tipo_quarto": "duplo"
+}
+
+
+
+POST http://localhost:4561/api/reservas
+Content-Type: application/json
+
+{
+  "cliente": "Ana",
+  "checkin": "2024-05-10",
+  "checkout": "2024-05-12",
+  "tipo_quarto": "suite"
+}
+
+
+
+PUT http://localhost:4561/api/reservas/1
+Content-Type: application/json
+
+{
+  "tipo_quarto": "duplo"
+}
+
+
+
+PUT http://localhost:4561/api/reservas/1
+Content-Type: application/json
+
+{
+  "checkin": "2024-05-10"
+}
+
+
+
+PUT http://localhost:4561/api/reservas/99
+Content-Type: application/json
+
+{
+  "tipo_quarto": "duplo"
+}
+
+
+#
+PUT http://localhost:4561/api/reservas/1
+Content-Type: application/json
+
+{
+  "tipo_quarto": "suite"
+}
+
+
+
+DELETE http://localhost:4561/api/reservas/1
+
+
+
+DELETE http://localhost:4561/api

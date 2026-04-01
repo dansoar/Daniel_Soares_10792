@@ -1,0 +1,190 @@
+POST http://localhost:2525/imposters
+Content-Type: application/json
+
+
+{
+  "port": 4562,
+  "protocol": "http",
+  "stubs": [
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/livros" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": [
+              { "id": 1, "titulo": "1984", "autor": "George Orwell", "emprestado": false },
+              { "id": 2, "titulo": "Duna", "autor": "Frank Herbert", "emprestado": true },
+              { "id": 3, "titulo": "Clean Code", "autor": "Robert C. Martin", "emprestado": false }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/livros/1" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": {
+              "id": 1,
+              "titulo": "1984",
+              "autor": "George Orwell",
+              "emprestado": false
+            }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/livros/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "Livro não encontrado" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/emprestimos" } },
+        {
+          "not": {
+            "and": [
+              { "contains": { "body": "\"cliente\"" } },
+              { "contains": { "body": "\"livro_id\"" } },
+              { "contains": { "body": "\"data_emprestimo\"" } }
+            ]
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "body": { "error": "Campos obrigatórios em falta" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/emprestimos" } },
+        { "contains": { "body": "\"livro_id\": 2" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 409,
+            "body": { "error": "Livro já emprestado" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/emprestimos" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json",
+              "Location": "/api/emprestimos/5"
+            },
+            "body": {
+              "id": 5,
+              "status": "emprestimo registado"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/emprestimos/99/devolucao" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "Empréstimo não encontrado" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/emprestimos/1/devolucao" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": { "status": "livro devolvido" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/livros/2" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 409,
+            "body": { "error": "Livro está emprestado" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/livros/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "Livro não encontrado" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/livros/1" } }
+      ],
+      "responses": [
+        {
+          "is": { "statusCode": 204 }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "GET" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "not_found" }
+          }
+        }
+      ]
+    }
+  ]
+}

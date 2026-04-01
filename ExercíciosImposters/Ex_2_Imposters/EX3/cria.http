@@ -1,0 +1,274 @@
+POST http://localhost:2525/imposters
+Content-Type: application/json
+
+{
+  "port": 4561,
+  "protocol": "http",
+  "stubs": [
+
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/reservas" } },
+        { "contains": { "body": "\"checkout\": \"2024-01-01\"" } },
+        { "contains": { "body": "\"checkin\": \"2024-01-05\"" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "body": { "error": "Checkout não pode ser anterior ao checkin" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/reservas" } },
+        {
+          "not": {
+            "and": [
+              { "contains": { "body": "\"cliente\"" } },
+              { "contains": { "body": "\"checkin\"" } },
+              { "contains": { "body": "\"checkout\"" } },
+              { "contains": { "body": "\"tipo_quarto\"" } }
+            ]
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "body": { "error": "Campos obrigatórios em falta" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/reservas" } },
+        { "contains": { "body": "\"tipo_quarto\": \"suite\"" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 409,
+            "body": { "error": "Sem disponibilidade" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/reservas" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json",
+              "Location": "/api/reservas/3"
+            },
+            "body": {
+              "id": 3,
+              "status": "reserva criada"
+            }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/reservas" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": [
+              {
+                "id": 1,
+                "cliente": "João Silva",
+                "checkin": "2024-05-10",
+                "checkout": "2024-05-12",
+                "tipo_quarto": "duplo"
+              },
+              {
+                "id": 2,
+                "cliente": "Maria Costa",
+                "checkin": "2024-06-01",
+                "checkout": "2024-06-05",
+                "tipo_quarto": "single"
+              }
+            ]
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/reservas/1" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": {
+              "id": 1,
+              "cliente": "João Silva",
+              "checkin": "2024-05-10",
+              "checkout": "2024-05-12",
+              "tipo_quarto": "duplo"
+            }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/reservas/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "Reserva não encontrada" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/reservas/1" } },
+        { "contains": { "body": "\"checkin\": \"2024-05-10\"" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "body": { "error": "Alterações só permitidas até 24h antes do checkin" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/reservas/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "Reserva não encontrada" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/reservas/1" } },
+        { "contains": { "body": "\"tipo_quarto\": \"suite\"" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 409,
+            "body": { "error": "Sem disponibilidade" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/reservas/1" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "body": { "status": "reserva atualizada" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/reservas/1" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "body": { "error": "Não é possível cancelar após o checkin" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/reservas/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "Reserva não encontrada" }
+          }
+        }
+      ]
+    },
+
+
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/reservas/2" } }
+      ],
+      "responses": [
+        {
+          "is": { "statusCode": 204 }
+        }
+      ]
+    },
+
+    {
+      "predicates": [
+        { "equals": { "method": "GET" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "not_found" }
+          }
+        }
+      ]
+    }
+
+  ]
+}

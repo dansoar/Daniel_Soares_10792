@@ -1,0 +1,6 @@
+GET  http://localhost:4546/api/marcas
+Content-Type: application/json
+
+{
+    "optionalField": true
+}

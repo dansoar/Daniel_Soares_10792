@@ -1,0 +1,203 @@
+### Exercício 6 – Gestão de Tarefas (To-Do List)
+### Criar imposter no Mountebank (porta 4566)
+
+POST http://localhost:2525/imposters
+Content-Type: application/json
+
+{
+  "port": 4566,
+  "protocol": "http",
+  "stubs": [
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/tarefas" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": [
+              { "id": 1, "titulo": "Reunião semanal",   "descricao": "Reunião com a equipa às 10h", "estado": "pendente"  },
+              { "id": 2, "titulo": "Relatório mensal",  "descricao": "Preparar relatório de abril",  "estado": "concluída" },
+              { "id": 3, "titulo": "Deploy produção",   "descricao": "Publicar versão 2.1.0",        "estado": "pendente"  }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/tarefas/1" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "id": 1,
+              "titulo": "Reunião semanal",
+              "descricao": "Reunião com a equipa às 10h",
+              "estado": "pendente"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "GET", "path": "/api/tarefas/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Tarefa não encontrada" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/tarefas" } },
+        {
+          "not": {
+            "and": [
+              { "contains": { "body": "\"titulo\"" } },
+              { "contains": { "body": "\"descricao\"" } }
+            ]
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Campos obrigatórios em falta: titulo, descricao" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/tarefas" } },
+        { "contains": { "body": "\"titulo\": \"\"" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "O título não pode estar vazio" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "POST", "path": "/api/tarefas" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json",
+              "Location": "/api/tarefas/4"
+            },
+            "body": {
+              "id": 4,
+              "status": "Tarefa criada com sucesso"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/tarefas/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Tarefa não encontrada" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "PUT", "path": "/api/tarefas/1" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": { "Content-Type": "application/json" },
+            "body": {
+              "id": 1,
+              "estado": "concluída",
+              "status": "Tarefa atualizada"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/tarefas/1" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 409,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Só é possível eliminar tarefas concluídas" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/tarefas/2" } }
+      ],
+      "responses": [
+        {
+          "is": { "statusCode": 204 }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "DELETE", "path": "/api/tarefas/99" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "headers": { "Content-Type": "application/json" },
+            "body": { "error": "Tarefa não encontrada" }
+          }
+        }
+      ]
+    },
+    {
+      "predicates": [
+        { "equals": { "method": "GET" } }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 404,
+            "body": { "error": "not_found" }
+          }
+        }
+      ]
+    }
+  ]
+}

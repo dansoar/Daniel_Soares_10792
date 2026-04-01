@@ -1,0 +1,83 @@
+POST http://localhost:2525/imposters
+
+{
+  "port": 4553,
+  "protocol": "http",
+  "stubs": [
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "POST",
+            "path": "/api/temperature"
+          }
+        },
+        {
+          "equals": {
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          }
+        },
+        {
+          "not": {
+            "contains": {
+              "body": "value"
+            }
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 400,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "error": "missing_field",
+              "message": "Field 'value' is required"
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "POST",
+            "path": "/api/temperature"
+          }
+        },
+        {
+          "equals": {
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          }
+        },
+        {
+          "contains": {
+            "body": "value"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "is": {
+            "statusCode": 201,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "status": "created",
+              "message": "Temperature measurement stored successfully."
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

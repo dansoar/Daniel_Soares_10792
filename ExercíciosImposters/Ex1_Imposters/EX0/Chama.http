@@ -1,0 +1,6 @@
+POST http://localhost:4545/test 
+Content-Type: application/json
+
+{
+    "optionalField": true
+}

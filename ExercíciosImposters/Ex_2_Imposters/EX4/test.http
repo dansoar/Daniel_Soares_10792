@@ -1,0 +1,37 @@
+GET http://localhost:4562/api/livros
+
+# GET http://localhost:4562/api/livros/1
+
+# GET http://localhost:4562/api/livros/99
+
+# POST http://localhost:4562/api/emprestimos
+# Content-Type: application/json
+# {
+#   "cliente": "Afonso",
+#   "livro_id": 1,
+#   "data_emprestimo": "2024-05-01"
+# }
+
+# POST http://localhost:4562/api/emprestimos
+# Content-Type: application/json
+# {
+#   "cliente": "Afonso"
+# }
+
+# POST http://localhost:4562/api/emprestimos
+# Content-Type: application/json
+# {
+#   "cliente": "Afonso",
+#   "livro_id": 2,
+#   "data_emprestimo": "2024-05-01"
+# }
+
+# PUT http://localhost:4562/api/emprestimos/1/devolucao
+
+# PUT http://localhost:4562/api/emprestimos/99/devolucao
+
+# DELETE http://localhost:4562/api/livros/2
+
+# DELETE http://localhost:4562/api/livros/1
+
+# DELETE http://localhost:4562/api/livros/99

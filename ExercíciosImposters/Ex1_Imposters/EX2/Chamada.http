@@ -1,0 +1,6 @@
+GET http://localhost:4547/api/cars?brand=Toyota
+Content-Type: application/json
+
+{
+    "optionalField": true
+}

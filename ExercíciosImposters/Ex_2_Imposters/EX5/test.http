@@ -1,0 +1,114 @@
+### Exercício 5 – Testes: Gestão de Funcionários
+### Base URL: http://localhost:4565
+
+### ─────────────────────────────────────────────
+### 1. GET /api/funcionarios → lista todos os funcionários
+###    Esperado: 200 OK com array de funcionários
+### ─────────────────────────────────────────────
+GET http://localhost:4565/api/funcionarios
+
+###
+
+### ─────────────────────────────────────────────
+### 2. POST /api/funcionarios → adicionar funcionário válido
+###    Esperado: 201 Created
+### ─────────────────────────────────────────────
+POST http://localhost:4565/api/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "David Rocha",
+  "cargo": "Analista",
+  "salario": 1100
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 3. POST /api/funcionarios → campos obrigatórios em falta
+###    Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+POST http://localhost:4565/api/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "Eva Lima"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 4. POST /api/funcionarios → salário abaixo do mínimo (760 €)
+###    Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+POST http://localhost:4565/api/funcionarios
+Content-Type: application/json
+
+{
+  "nome": "Filipe Neto",
+  "cargo": "Estagiário",
+  "salario": 500
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 5. PUT /api/funcionarios/1/salario → atualizar salário (válido)
+###    Esperado: 200 OK
+### ─────────────────────────────────────────────
+PUT http://localhost:4565/api/funcionarios/1/salario
+Content-Type: application/json
+
+{
+  "salario": 2000
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 6. PUT /api/funcionarios/1/salario → salário abaixo do mínimo
+###    Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+PUT http://localhost:4565/api/funcionarios/1/salario
+Content-Type: application/json
+
+{
+  "salario": 500
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 7. PUT /api/funcionarios/99/salario → funcionário inexistente
+###    Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+PUT http://localhost:4565/api/funcionarios/99/salario
+Content-Type: application/json
+
+{
+  "salario": 1500
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 8. DELETE /api/funcionarios/1 → remover sem tarefas pendentes
+###    Esperado: 204 No Content
+### ─────────────────────────────────────────────
+DELETE http://localhost:4565/api/funcionarios/1
+
+###
+
+### ─────────────────────────────────────────────
+### 9. DELETE /api/funcionarios/2 → funcionário com tarefas pendentes
+###    Esperado: 409 Conflict
+### ─────────────────────────────────────────────
+DELETE http://localhost:4565/api/funcionarios/2
+
+###
+
+### ─────────────────────────────────────────────
+### 10. DELETE /api/funcionarios/99 → funcionário inexistente
+###     Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+DELETE http://localhost:4565/api/funcionarios/99

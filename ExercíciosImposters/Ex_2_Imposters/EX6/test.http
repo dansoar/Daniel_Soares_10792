@@ -1,0 +1,115 @@
+### Exercício 6 – Testes: Gestão de Tarefas (To-Do List)
+### Base URL: http://localhost:4566
+
+### ─────────────────────────────────────────────
+### 1. GET /api/tarefas → lista todas as tarefas
+###    Esperado: 200 OK com array de tarefas
+### ─────────────────────────────────────────────
+GET http://localhost:4566/api/tarefas
+
+###
+
+### ─────────────────────────────────────────────
+### 2. GET /api/tarefas/1 → detalhe de tarefa existente
+###    Esperado: 200 OK
+### ─────────────────────────────────────────────
+GET http://localhost:4566/api/tarefas/1
+
+###
+
+### ─────────────────────────────────────────────
+### 3. GET /api/tarefas/99 → tarefa inexistente
+###    Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+GET http://localhost:4566/api/tarefas/99
+
+###
+
+### ─────────────────────────────────────────────
+### 4. POST /api/tarefas → criar tarefa válida
+###    Esperado: 201 Created
+### ─────────────────────────────────────────────
+POST http://localhost:4566/api/tarefas
+Content-Type: application/json
+
+{
+  "titulo": "Atualizar dependências",
+  "descricao": "Atualizar todos os packages npm do projeto"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 5. POST /api/tarefas → campos obrigatórios em falta
+###    Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+POST http://localhost:4566/api/tarefas
+Content-Type: application/json
+
+{
+  "titulo": "Só o título"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 6. POST /api/tarefas → título vazio
+###    Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+POST http://localhost:4566/api/tarefas
+Content-Type: application/json
+
+{
+  "titulo": "",
+  "descricao": "Descrição sem título"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 7. PUT /api/tarefas/1 → alterar estado de tarefa existente
+###    Esperado: 200 OK
+### ─────────────────────────────────────────────
+PUT http://localhost:4566/api/tarefas/1
+Content-Type: application/json
+
+{
+  "estado": "concluída"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 8. PUT /api/tarefas/99 → tarefa inexistente
+###    Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+PUT http://localhost:4566/api/tarefas/99
+Content-Type: application/json
+
+{
+  "estado": "concluída"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 9. DELETE /api/tarefas/2 → eliminar tarefa concluída
+###    Esperado: 204 No Content
+### ─────────────────────────────────────────────
+DELETE http://localhost:4566/api/tarefas/2
+
+###
+
+### ─────────────────────────────────────────────
+### 10. DELETE /api/tarefas/1 → eliminar tarefa pendente (não permitido)
+###     Esperado: 409 Conflict
+### ─────────────────────────────────────────────
+DELETE http://localhost:4566/api/tarefas/1
+
+###
+
+### ─────────────────────────────────────────────
+### 11. DELETE /api/tarefas/99 → tarefa inexistente
+###     Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+DELETE http://localhost:4566/api/tarefas/99

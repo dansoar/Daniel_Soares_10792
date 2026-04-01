@@ -1,0 +1,16 @@
+
+POST http://localhost:4554/api/tasks
+Content-Type: application/json
+
+{
+  "title": "duplicate",
+  "description": "tarefa repetida"
+}
+
+POST http://localhost:4554/api/tasks
+Content-Type: application/json
+
+{
+  "title": "normal",
+  "description": "tarefa válida"
+}

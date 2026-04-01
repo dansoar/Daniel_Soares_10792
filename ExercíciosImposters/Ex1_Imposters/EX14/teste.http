@@ -1,0 +1,5 @@
+POST http://localhost:4557/qualquer/coisa
+
+{
+  "campo": "valor"
+}

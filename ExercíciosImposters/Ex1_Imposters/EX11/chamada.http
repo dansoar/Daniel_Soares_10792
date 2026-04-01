@@ -1,0 +1,24 @@
+
+POST http://localhost:4554/api/tasks
+Content-Type: application/json
+
+{
+  "title": "comprar pão",
+  "description": "ir à padaria"
+}
+
+POST http://localhost:4554/api/tasks
+Content-Type: application/json
+
+{
+  "title": "estudar",
+  "description": "exercício 11"
+}
+
+POST http://localhost:4554/api/tasks
+Content-Type: application/json
+
+{
+  "title": "duplicate",
+  "description": "tarefa repetida"
+}

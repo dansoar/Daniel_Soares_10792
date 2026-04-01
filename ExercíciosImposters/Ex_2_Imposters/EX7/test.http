@@ -1,0 +1,172 @@
+### Exercício 7 – Testes: Gestão de Clientes e Pedidos
+### Base URL: http://localhost:4567
+
+### ─────────────────────────────────────────────
+### 1. GET /api/clientes → lista todos os clientes
+###    Esperado: 200 OK com array de clientes
+### ─────────────────────────────────────────────
+GET http://localhost:4567/api/clientes
+
+###
+
+### ─────────────────────────────────────────────
+### 2. POST /api/clientes → adicionar cliente válido
+###    Esperado: 201 Created
+### ─────────────────────────────────────────────
+POST http://localhost:4567/api/clientes
+Content-Type: application/json
+
+{
+  "nome": "Pedro Alves",
+  "email": "pedro@example.com"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 3. POST /api/clientes → campos obrigatórios em falta
+###    Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+POST http://localhost:4567/api/clientes
+Content-Type: application/json
+
+{
+  "nome": "Sem email"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 4. GET /api/clientes/1/pedidos → pedidos de cliente existente
+###    Esperado: 200 OK
+### ─────────────────────────────────────────────
+GET http://localhost:4567/api/clientes/1/pedidos
+
+###
+
+### ─────────────────────────────────────────────
+### 5. GET /api/clientes/99/pedidos → cliente inexistente
+###    Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+GET http://localhost:4567/api/clientes/99/pedidos
+
+###
+
+### ─────────────────────────────────────────────
+### 6. POST /api/pedidos → criar pedido válido
+###    Esperado: 201 Created
+### ─────────────────────────────────────────────
+POST http://localhost:4567/api/pedidos
+Content-Type: application/json
+
+{
+  "cliente_id": 1,
+  "produto": "Rato sem fio",
+  "quantidade": 3
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 7. POST /api/pedidos → campos obrigatórios em falta
+###    Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+POST http://localhost:4567/api/pedidos
+Content-Type: application/json
+
+{
+  "produto": "Headset"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 8. POST /api/pedidos → cliente inexistente
+###    Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+POST http://localhost:4567/api/pedidos
+Content-Type: application/json
+
+{
+  "cliente_id": 99,
+  "produto": "Webcam",
+  "quantidade": 1
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 9. POST /api/pedidos → quantidade inválida (0)
+###    Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+POST http://localhost:4567/api/pedidos
+Content-Type: application/json
+
+{
+  "cliente_id": 1,
+  "produto": "Pen USB",
+  "quantidade": 0
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 10. PUT /api/pedidos/10 → atualizar estado para valor válido
+###     Esperado: 200 OK
+### ─────────────────────────────────────────────
+PUT http://localhost:4567/api/pedidos/10
+Content-Type: application/json
+
+{
+  "estado": "Enviado"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 11. PUT /api/pedidos/10 → estado inválido
+###     Esperado: 400 Bad Request
+### ─────────────────────────────────────────────
+PUT http://localhost:4567/api/pedidos/10
+Content-Type: application/json
+
+{
+  "estado": "Cancelado"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 12. PUT /api/pedidos/99 → pedido inexistente
+###     Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+PUT http://localhost:4567/api/pedidos/99
+Content-Type: application/json
+
+{
+  "estado": "Enviado"
+}
+
+###
+
+### ─────────────────────────────────────────────
+### 13. DELETE /api/pedidos/11 → cancelar pedido Em processamento
+###     Esperado: 204 No Content
+### ─────────────────────────────────────────────
+DELETE http://localhost:4567/api/pedidos/11
+
+###
+
+### ─────────────────────────────────────────────
+### 14. DELETE /api/pedidos/10 → pedido já entregue (não permitido)
+###     Esperado: 409 Conflict
+### ─────────────────────────────────────────────
+DELETE http://localhost:4567/api/pedidos/10
+
+###
+
+### ─────────────────────────────────────────────
+### 15. DELETE /api/pedidos/99 → pedido inexistente
+###     Esperado: 404 Not Found
+### ─────────────────────────────────────────────
+DELETE http://localhost:4567/api/pedidos/99
